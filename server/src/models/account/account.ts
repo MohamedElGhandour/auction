@@ -57,6 +57,9 @@ const accountSchema = {
   avatar: {
     type: Buffer,
   },
+  currencyAmount: {
+    type: Number,
+  },
 };
 
 const options = {
@@ -65,6 +68,12 @@ const options = {
 };
 
 const schema: Schema<AccountDocument> = new Schema(accountSchema, options);
+
+schema.virtual("products", {
+  ref: "Product",
+  localField: "_id",
+  foreignField: "owner",
+});
 
 schema.methods.toJSON = toJSON;
 

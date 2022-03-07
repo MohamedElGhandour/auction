@@ -56,12 +56,20 @@ const accountSchema = {
     avatar: {
         type: Buffer,
     },
+    currencyAmount: {
+        type: Number,
+    },
 };
 const options = {
     timestamps: true,
     discriminatorKey: "kind",
 };
 const schema = new mongoose_1.Schema(accountSchema, options);
+schema.virtual("products", {
+    ref: "Product",
+    localField: "_id",
+    foreignField: "owner",
+});
 schema.methods.toJSON = index_1.toJSON;
 schema.methods.generateAuthToken = index_1.generateAuthToken;
 schema.statics.findByCredentials = (email, password) => __awaiter(void 0, void 0, void 0, function* () {

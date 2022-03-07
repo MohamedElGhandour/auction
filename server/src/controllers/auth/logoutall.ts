@@ -1,5 +1,4 @@
-import { RequestHandler } from "express";
-// import User from "../models/user";
+import { RequestHandler, Request } from "express";
 
 export const logOutAll: RequestHandler = async (
   request: Request | any,

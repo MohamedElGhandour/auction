@@ -8,6 +8,7 @@ export interface Account {
   avatar: Buffer;
   biography: string;
   description: string;
+  currencyAmount: number;
 }
 
 export interface Client extends Account {
