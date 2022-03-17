@@ -54,10 +54,12 @@ const accountSchema = {
         },
     ],
     avatar: {
-        type: Buffer,
+        type: String,
+        default: "https://res.cloudinary.com/dv4iaou4v/image/upload/v1621727059/social-media-app/avatar_l0vqse.jpg",
     },
     currencyAmount: {
         type: Number,
+        default: 0,
     },
 };
 const options = {

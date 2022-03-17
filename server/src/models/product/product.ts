@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { ProductDocument, ProductModel } from "../../types/product";
+import { toJSON } from "./functions/index";
 
 const { ObjectId } = Schema.Types;
 
@@ -57,6 +58,10 @@ const productSchema = {
     //   }
     // },
   },
+  image: {
+    type: String,
+    required: true,
+  },
   successfulBidder: {
     bid: {
       type: ObjectId,
@@ -76,6 +81,8 @@ const options = {
 };
 
 const schema: Schema<ProductDocument> = new Schema(productSchema, options);
+
+schema.methods.toJSON = toJSON;
 
 const Product = model<ProductDocument, ProductModel>("Product", schema);
 

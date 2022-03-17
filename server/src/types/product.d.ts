@@ -13,12 +13,13 @@ export interface Product {
   closingDate: Date;
   comments: ObjectId;
   bids: ObjectId;
+  image: string;
   //   hidden: boolean;
 }
 
 // Methods
 export interface ProductDocument extends Product, Document {
-  //   toJSON: () => any; // any for now
+  toJSON: () => any; // any for now
   //   generateAuthToken: () => Promise<string>;
 }
 

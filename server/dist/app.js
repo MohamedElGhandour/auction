@@ -15,8 +15,8 @@ const error_1 = require("./middleware/error/error");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-app.use("/auth", auth_1.default);
-app.use("/product", product_1.default);
+app.use("/api/auth", auth_1.default);
+app.use("/api/product", product_1.default);
 app.use(error_1.errorHandler);
 app.get("*", (_req, res) => {
     res.status(404).json({ err: "Not Found" });

@@ -25,7 +25,7 @@ const products = (request, response) => __awaiter(void 0, void 0, void 0, functi
         sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
     }
     try {
-        const products = yield product_1.default.find({}, "-__v");
+        const products = yield product_1.default.find({});
         response.status(200).json({ products });
     }
     catch (error) {

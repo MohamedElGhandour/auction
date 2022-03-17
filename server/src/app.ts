@@ -20,9 +20,9 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
 
-app.use("/product", productRouter);
+app.use("/api/product", productRouter);
 
 app.use(errorHandler);
 

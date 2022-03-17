@@ -16,9 +16,9 @@ exports.logIn = void 0;
 const account_1 = __importDefault(require("../../models/account/account"));
 const logIn = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield account_1.default.findByCredentials(request.body.email, request.body.password);
-        const token = yield user.generateAuthToken();
-        response.status(200).json({ user, token });
+        const account = yield account_1.default.findByCredentials(request.body.email, request.body.password);
+        const token = yield account.generateAuthToken();
+        response.status(200).json({ account, token });
     }
     catch (error) {
         next(error);

@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import Product from "../../models/product/product";
 
+// TODO add manipulate on query
 export const products: RequestHandler = async (request, response) => {
   const match: any = {};
   const sort: any = {};
@@ -13,7 +14,7 @@ export const products: RequestHandler = async (request, response) => {
     sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
   }
   try {
-    const products = await Product.find({}, "-__v");
+    const products = await Product.find({});
     response.status(200).json({ products });
   } catch (error) {
     response.status(400).json(error);

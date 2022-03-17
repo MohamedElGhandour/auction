@@ -4,7 +4,7 @@ import Product from "../../models/product/product";
 export const product: RequestHandler = async (request, response) => {
   const _id = request.params.id;
   try {
-    const product = await Product.findOne({ _id }, "-__v");
+    const product = await Product.findOne({ _id });
     if (!product) response.status(404).send("Not Found");
     response.json(product);
   } catch (error) {

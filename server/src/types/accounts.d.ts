@@ -5,7 +5,7 @@ export interface Account {
   email: string;
   password: string;
   tokens: object[];
-  avatar: Buffer;
+  avatar: string;
   biography: string;
   description: string;
   currencyAmount: number;

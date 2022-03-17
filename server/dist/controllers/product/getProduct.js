@@ -17,7 +17,7 @@ const product_1 = __importDefault(require("../../models/product/product"));
 const product = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const _id = request.params.id;
     try {
-        const product = yield product_1.default.findOne({ _id }, "-__v");
+        const product = yield product_1.default.findOne({ _id });
         if (!product)
             response.status(404).send("Not Found");
         response.json(product);

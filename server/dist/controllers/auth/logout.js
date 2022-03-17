@@ -10,14 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logOut = void 0;
-const logOut = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+const logOut = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         request.user.tokens = request.user.tokens.filter((token) => token.token !== request.token);
         yield request.user.save();
         response.send();
     }
     catch (error) {
-        response.status(400).json(error);
+        next(error);
     }
 });
 exports.logOut = logOut;

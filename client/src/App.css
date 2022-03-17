@@ -1,38 +1,45 @@
-.App {
-  text-align: center;
+/* CSS */
+/* .swatch_1{
+    background: #07070a;
 }
+.swatch_2{
+    background: #57313d;
+}
+.swatch_3{
+    background: #081359;
+}
+.swatch_4{
+    background: #0a18e1;
+}
+.swatch_5{
+    background: #04199b;
+}
+.swatch_6{
+    background: #ab172d;
+}
+.swatch_7{
+    background: #3056c2;
+}
+.swatch_8{
+    background: #8f94b6;
+} */
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+/* SASS */
+/* $swatch_1: #07070a;
+$swatch_2: #57313d;
+$swatch_3: #081359;
+$swatch_4: #0a18e1;
+$swatch_5: #04199b;
+$swatch_6: #ab172d;
+$swatch_7: #3056c2;
+$swatch_8: #8f94b6; */
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* LESS */
+/* @swatch_1: #07070a;
+@swatch_2: #57313d;
+@swatch_3: #081359;
+@swatch_4: #0a18e1;
+@swatch_5: #04199b;
+@swatch_6: #ab172d;
+@swatch_7: #3056c2;
+@swatch_8: #8f94b6; */

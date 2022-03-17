@@ -3,7 +3,8 @@ import { RequestHandler } from "express";
 
 export const logOut: RequestHandler = async (
   request: Request | any,
-  response
+  response,
+  next
 ) => {
   try {
     request.user.tokens = request.user.tokens.filter(
@@ -12,6 +13,7 @@ export const logOut: RequestHandler = async (
     await request.user.save();
     response.send();
   } catch (error) {
-    response.status(400).json(error);
+    // response.status(400).json(error);
+    next(error);
   }
 };

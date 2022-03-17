@@ -16,21 +16,19 @@ exports.register = void 0;
 const client_1 = __importDefault(require("../../models/account/client"));
 const organization_1 = __importDefault(require("../../models/account/organization"));
 const register = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const type = request.body.type;
-    if (type === "client" || type === "organization") {
+    const type = request.body.type.toLowerCase().trim();
+    try {
+        if (!(type === "client" || type === "organization"))
+            throw new Error("should select type");
         const account = type === "client"
             ? new client_1.default(request.body)
             : new organization_1.default(request.body);
-        try {
-            yield account.save();
-            const token = yield account.generateAuthToken();
-            response.send({ account, token });
-        }
-        catch (error) {
-            next(error);
-        }
+        yield account.save();
+        const token = yield account.generateAuthToken();
+        response.send({ account, token });
     }
-    else
-        response.status(400).json({ msg: "select type plz" });
+    catch (error) {
+        next(error);
+    }
 });
 exports.register = register;
