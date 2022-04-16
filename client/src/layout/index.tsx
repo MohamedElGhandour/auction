@@ -32,12 +32,15 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import HomeIcon from "@mui/icons-material/Home";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import Container from "@mui/material/Container";
 // 3
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import Grid from "@mui/material/Grid";
+import { NavLink, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 // * SVG
 import Logo from "../assets/images/logo";
@@ -153,7 +156,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Layout(props: any) {
+export default function Layout() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -272,9 +275,15 @@ export default function Layout(props: any) {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  const name: string = localStorage.getItem("name") || "none";
-  const currencyAmount = localStorage.getItem("currencyAmount");
-  const avatar: string = localStorage.getItem("avatar") || "none";
+  const name: string =
+    useSelector((state: any) => state.auth.name) ||
+    localStorage.getItem("name");
+  const currencyAmount =
+    useSelector((state: any) => state.auth.currencyAmount) ||
+    localStorage.getItem("currencyAmount");
+  const avatar: string =
+    useSelector((state: any) => state.auth.avatar) ||
+    localStorage.getItem("avatar");
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -301,7 +310,9 @@ export default function Layout(props: any) {
           >
             <MenuIcon />
           </IconButton>
-          <Logo />
+          <NavLink to="/">
+            <Logo />
+          </NavLink>
           <Search sx={{ ml: 1 }}>
             <SearchIconWrapper>
               <SearchIcon />
@@ -312,28 +323,35 @@ export default function Layout(props: any) {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box
-            sx={{
-              flexGrow: 0,
-              display: { xs: "none", md: "flex" },
-              backgroundColor: alpha(theme.palette.common.black, 0.15),
-              "&:hover": {
-                backgroundColor: alpha(theme.palette.common.black, 0.25),
-              },
-              cursor: "pointer",
-              p: "5px",
-              color: "#000",
-              borderRadius: "75px",
-              alignItems: "center",
-              mr: 1,
+          <NavLink
+            style={{
+              textDecoration: "none",
             }}
+            to="/wallet"
           >
-            <AccountBalanceWalletIcon />
-            <Typography sx={{ pl: 1, pr: 1 }}>
-              {currencyAmount ? currencyAmount : "000"}{" "}
-              <span style={{ color: "#1878f2" }}>$</span>
-            </Typography>
-          </Box>
+            <Box
+              sx={{
+                flexGrow: 0,
+                display: { xs: "none", md: "flex" },
+                backgroundColor: alpha(theme.palette.common.black, 0.15),
+                "&:hover": {
+                  backgroundColor: alpha(theme.palette.common.black, 0.25),
+                },
+                cursor: "pointer",
+                p: "5px",
+                color: "#000",
+                borderRadius: "75px",
+                alignItems: "center",
+                mr: 1,
+              }}
+            >
+              <AccountBalanceWalletIcon />
+              <Typography sx={{ pl: 1, pr: 1 }}>
+                {currencyAmount ? currencyAmount : "000"}{" "}
+                <span style={{ color: "#1878f2" }}>$</span>
+              </Typography>
+            </Box>
+          </NavLink>
 
           <Box
             sx={{
@@ -373,9 +391,15 @@ export default function Layout(props: any) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                <NavLink
+                  key={setting}
+                  to={`/${setting.toLowerCase()}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                </NavLink>
               ))}
             </Menu>
           </Box>
@@ -403,9 +427,15 @@ export default function Layout(props: any) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                <NavLink
+                  key={setting}
+                  to={`/${setting.toLowerCase()}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                </NavLink>
               ))}
             </Menu>
           </Box>
@@ -498,10 +528,14 @@ export default function Layout(props: any) {
       </Drawer>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, backgroundColor: "#fafbfc" }}
+        sx={{ flexGrow: 1, p: 3, backgroundColor: "#f5f5f5" }}
       >
         <DrawerHeader />
-        <Grid>{props.children}</Grid>
+        <Grid>
+          <Container fixed>
+            <Outlet />
+          </Container>
+        </Grid>
       </Box>
       {renderMobileMenu}
       {renderMenu}

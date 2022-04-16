@@ -7,18 +7,16 @@ const handleValidationError = (err, res) => {
     let code = 400;
     if (errors.length > 1) {
         const formattedErrors = errors.join(" ");
-        res
-            .status(code)
-            .send({
+        res.status(code).send({
             statusText: "FAILED",
-            messages: formattedErrors,
+            message: formattedErrors,
             fields: fields,
         });
     }
     else {
         res
             .status(code)
-            .send({ statusText: "FAILED", messages: errors, fields: fields });
+            .send({ statusText: "FAILED", message: errors, fields: fields });
     }
 };
 exports.handleValidationError = handleValidationError;

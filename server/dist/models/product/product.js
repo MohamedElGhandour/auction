@@ -17,11 +17,11 @@ const productSchema = {
         type: ObjectId,
         ref: "Comment",
     },
-    bids: {
-        type: ObjectId,
-        ref: "bid",
-    },
     startingPrice: {
+        type: Number,
+        required: true,
+    },
+    livePrice: {
         type: Number,
         required: true,
     },
@@ -57,8 +57,14 @@ const productSchema = {
 };
 const options = {
     timestamps: true,
+    toJSON: { virtuals: true },
 };
 const schema = new mongoose_1.Schema(productSchema, options);
+schema.virtual("bids", {
+    ref: "Bid",
+    localField: "_id",
+    foreignField: "product",
+});
 schema.methods.toJSON = index_1.toJSON;
 const Product = (0, mongoose_1.model)("Product", schema);
 module.exports = Product;

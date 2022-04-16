@@ -7,6 +7,6 @@ const handleDuplicateKeyError = (err, res) => {
     const error = `There is already a account with this ${field} address. Please Log In`;
     res
         .status(code)
-        .send({ statusText: "FAILED", messages: error, fields: field });
+        .send({ statusText: "FAILED", message: error, fields: field });
 };
 exports.handleDuplicateKeyError = handleDuplicateKeyError;

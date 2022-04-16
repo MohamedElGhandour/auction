@@ -68,6 +68,7 @@ const accountSchema = {
 const options = {
   timestamps: true,
   discriminatorKey: "kind",
+  toJSON: { virtuals: true },
 };
 
 const schema: Schema<AccountDocument> = new Schema(accountSchema, options);

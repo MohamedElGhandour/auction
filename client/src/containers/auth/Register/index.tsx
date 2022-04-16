@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -20,7 +20,7 @@ import Logo from "../../../assets/images/logo";
 import wallpaper from "../../../assets/wallpaper/auth_wallpaper.jpg";
 // * Package
 import { cloneDeep } from "lodash";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 // * Components
 import Copyright from "../../../components/Copyright/index";
@@ -48,7 +48,7 @@ const theme = createTheme({
 
 export default function Register() {
   const dispatch = useDispatch();
-  const error = useSelector((state: any) => state.auth.errorSignup);
+  const error = useSelector((state: any) => state.auth.errorRegister);
   const [controls, setControls] = React.useState({
     name: {
       elementType: "input",
@@ -106,6 +106,14 @@ export default function Register() {
       touched: false,
     },
   });
+
+  const token =
+    useSelector((state: any) => state.auth.token) ||
+    localStorage.getItem("token");
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (token) return navigate("/");
+  }, [token, navigate]);
 
   const handleClickShowPassword = () => {
     setControls((prevControls) => ({

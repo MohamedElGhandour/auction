@@ -11,8 +11,8 @@ export const failLogin = (error: any) => ({
   error: error,
 });
 
-export const failSignup = (error: any) => ({
-  type: actionTypes.FAIL_AUTH_SIGNUP,
+export const failRegister = (error: any) => ({
+  type: actionTypes.FAIL_AUTH_REGISTER,
   error: error,
 });
 
@@ -26,11 +26,39 @@ export const authCheckState = () => ({
   type: actionTypes.AUTH_CHECK_STATE,
 });
 
+export const addPayment = (data: any) => ({
+  type: actionTypes.ADD_PAYMENT,
+  data: data,
+});
+
+export const successAddPayment = (data: any) => ({
+  type: actionTypes.SUCCESS_ADD_PAYMENT,
+  data: data,
+});
+
 export const fetchProducts = () => ({
   type: actionTypes.FETCH_PRODUCTS,
 });
 export const successFetchProducts = (data: any) => ({
   type: actionTypes.SUCCESS_FETCH_PRODUCTS,
+  data: data,
+});
+
+export const sendBid = (data: any) => ({
+  type: actionTypes.SEND_BID,
+  data: data,
+});
+export const successSendBid = (data: any) => ({
+  type: actionTypes.SUCCESS_SEND_BID,
+  data: data,
+});
+
+export const fetchProduct = (data: any) => ({
+  type: actionTypes.FETCH_PRODUCT,
+  data: data,
+});
+export const successFetchProduct = (data: any) => ({
+  type: actionTypes.SUCCESS_FETCH_PRODUCT,
   data: data,
 });
 

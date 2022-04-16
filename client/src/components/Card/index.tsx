@@ -5,11 +5,13 @@ import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import { NavLink } from "react-router-dom";
 
 interface cardProps {
   name: string;
   image: string;
   price: string;
+  id: string;
 }
 
 export default function ComplexGrid(props: cardProps) {
@@ -38,23 +40,14 @@ export default function ComplexGrid(props: cardProps) {
             }}
           ></ButtonBase>
         </Grid>
-        <Grid item xs={12} sm container>
-          <Grid
-            item
-            xs
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            spacing={2}
-          >
+        <Grid item xs={12} sm>
+          <Grid item>
             <Grid
               container
               direction="column"
               justifyContent="center"
               alignItems="stretch"
               spacing={1}
-              xs
             >
               <Typography
                 gutterBottom
@@ -76,7 +69,6 @@ export default function ComplexGrid(props: cardProps) {
                   direction="row"
                   justifyContent="space-evenly"
                   alignItems="flex-start"
-                  xs
                 >
                   <Grid item>
                     <Grid
@@ -84,7 +76,6 @@ export default function ComplexGrid(props: cardProps) {
                       direction="column"
                       justifyContent="center"
                       alignItems="center"
-                      xs
                     >
                       <Typography variant="body2" color="text.secondary">
                         Current Bid
@@ -121,7 +112,12 @@ export default function ComplexGrid(props: cardProps) {
                   justifyContent="space-between"
                   alignItems="center"
                 >
-                  <Button variant="outlined">View</Button>
+                  <NavLink
+                    to={`/product/${props.id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Button variant="outlined">View</Button>
+                  </NavLink>
                   <Button variant="contained">Place a Bid</Button>
                 </Grid>
               </Grid>

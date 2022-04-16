@@ -34,9 +34,8 @@ export function* loginSaga(action: any) {
     const res: ResponseGenerator = yield response.json();
     if (res.statusText === "FAILED") throw res;
     yield put(actions.loadingLogin(false));
-    console.log(res);
+
     yield put(actions.successAuth(res));
-    console.log(res);
   } catch (error) {
     yield put(actions.loadingLogin(false));
     yield put(actions.failLogin(error));
@@ -70,11 +69,41 @@ export function* loginSaga(action: any) {
 //   }
 // }
 
+export function* sendBid(action: any) {
+  let url: string = yield `${server}/api/bid/`;
+  const data = {
+    product: action.data.product,
+    price: action.data.price,
+  };
+  const token: string = yield localStorage.getItem("token");
+
+  try {
+    const response: ResponseGenerator = yield fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    });
+    const res: ResponseGenerator = yield response.json();
+    if (res.statusText === "FAILED") throw res;
+    console.log(res);
+    yield put(actions.successSendBid(res));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export function* fetchProducts() {
   const url: string = yield `${server}/api/product/`;
   const token: string = yield localStorage.getItem("token");
-  console.log(url, token);
-
   try {
     const response: ResponseGenerator = yield fetch(url, {
       headers: {
@@ -85,8 +114,28 @@ export function* fetchProducts() {
     });
     const res: ResponseGenerator = yield response.json();
     if (res.statusText === "FAILED") throw res;
-    console.log(res);
     yield put(actions.successFetchProducts(res));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function* fetchProduct(action: any) {
+  const id = action.data;
+  const url: string = yield `${server}/api/product/${id}`;
+  const token: string = yield localStorage.getItem("token");
+  try {
+    const response: ResponseGenerator = yield fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+    const res: ResponseGenerator = yield response.json();
+    if (res.statusText === "FAILED") throw res;
+    yield put(actions.successFetchProduct(res));
+    console.log(res);
   } catch (error) {
     console.log(error);
   }
@@ -100,7 +149,6 @@ export function* registerSaga(action: any) {
     password: action.data.password,
     type: action.data.type,
   };
-  console.log(data);
   yield put(actions.loadingSignup(true));
   try {
     const response: ResponseGenerator = yield fetch(url, {
@@ -123,7 +171,39 @@ export function* registerSaga(action: any) {
     yield put(actions.successAuth(res));
   } catch (error) {
     yield put(actions.loadingSignup(false));
-    yield put(actions.failSignup(error));
+    yield put(actions.failRegister(error));
+    console.log(error);
+  }
+}
+
+export function* addPaymentSaga(action: any) {
+  let url: string = yield `${server}/api/stripe/payment`;
+  const token: string = yield localStorage.getItem("token");
+
+  const data = {
+    tokenId: action.data.tokenId,
+    amount: action.data.amount,
+  };
+  try {
+    const response: ResponseGenerator = yield fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    });
+    const res: ResponseGenerator = yield response.json();
+    if (res.statusText === "FAILED") throw res;
+    console.log(res);
+    yield put(actions.successAddPayment(res));
+  } catch (error) {
     console.log(error);
   }
 }
@@ -207,18 +287,22 @@ export function* authCheckStateSaga() {
   if (!token) {
     yield put(actions.authLogout());
   } else {
-    const userId: string = yield localStorage.getItem("userId");
+    const _id: string = yield localStorage.getItem("userId");
     const avatar: string = yield localStorage.getItem("avatar");
     const name: string = yield localStorage.getItem("name");
     const email: string = yield localStorage.getItem("email");
+    const currencyAmount: string = yield localStorage.getItem("currencyAmount");
+    const kind: string = yield localStorage.getItem("type");
+
     const data = {
-      name: name,
-      userId: userId,
-      email: email,
-      token: token,
-      avatar: avatar,
+      name,
+      _id,
+      email,
+      avatar,
+      currencyAmount,
+      kind,
     };
-    yield put(actions.successAuth({ data: data }));
+    yield put(actions.successAuth({ account: data, token }));
   }
 }
 

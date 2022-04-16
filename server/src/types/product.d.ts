@@ -7,6 +7,7 @@ export interface Product {
   name: string;
   owner: ObjectId;
   startingPrice: number;
+  livePrice: number;
   category: string;
   description: string;
   startingDate: Date;

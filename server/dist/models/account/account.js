@@ -65,6 +65,7 @@ const accountSchema = {
 const options = {
     timestamps: true,
     discriminatorKey: "kind",
+    toJSON: { virtuals: true },
 };
 const schema = new mongoose_1.Schema(accountSchema, options);
 schema.virtual("products", {

@@ -3,7 +3,9 @@
  *  TODO: Tasks
  * * auth - DONE
  * * upload image - DONE
- * * main page - in progress
+ * * main page - Done
+ * * Payment - in progress
+ * *
  *
  */
 

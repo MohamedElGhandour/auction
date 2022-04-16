@@ -7,17 +7,15 @@ export const handleValidationError = (err: any, res: Response) => {
   let code = 400;
   if (errors.length > 1) {
     const formattedErrors = errors.join(" ");
-    res
-      .status(code)
-      .send({
-        statusText: "FAILED",
-        messages: formattedErrors,
-        fields: fields,
-      });
+    res.status(code).send({
+      statusText: "FAILED",
+      message: formattedErrors,
+      fields: fields,
+    });
   } else {
     res
       .status(code)
-      .send({ statusText: "FAILED", messages: errors, fields: fields });
+      .send({ statusText: "FAILED", message: errors, fields: fields });
   }
   // res.status(400).send({ err });
 };

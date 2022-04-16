@@ -6,12 +6,18 @@ export {
   // checkAuthTimeout,
   authCheckState,
   failLogin,
-  failSignup,
+  failRegister,
   // currentUser,
   authLogin,
   authRegister,
   fetchProducts,
   successFetchProducts,
+  addPayment,
+  successAddPayment,
+  fetchProduct,
+  successFetchProduct,
+  sendBid,
+  successSendBid,
 } from "./auth/index";
 
 export { loadingLogin, loadingSignup } from "./ui/index";

@@ -27,12 +27,11 @@ const productSchema = {
     // required: true,
     ref: "Comment",
   },
-  bids: {
-    type: ObjectId,
-    // required: true,
-    ref: "bid",
-  },
   startingPrice: {
+    type: Number,
+    required: true,
+  },
+  livePrice: {
     type: Number,
     required: true,
   },
@@ -78,9 +77,16 @@ const productSchema = {
 
 const options = {
   timestamps: true,
+  toJSON: { virtuals: true },
 };
 
 const schema: Schema<ProductDocument> = new Schema(productSchema, options);
+
+schema.virtual("bids", {
+  ref: "Bid",
+  localField: "_id",
+  foreignField: "product",
+});
 
 schema.methods.toJSON = toJSON;
 

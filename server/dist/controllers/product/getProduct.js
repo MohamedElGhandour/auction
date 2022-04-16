@@ -17,10 +17,17 @@ const product_1 = __importDefault(require("../../models/product/product"));
 const product = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const _id = request.params.id;
     try {
-        const product = yield product_1.default.findOne({ _id });
+        const product = yield product_1.default.findOne({ _id }).populate([
+            {
+                path: "bids",
+                populate: { path: "owner", select: "-__v -password -tokens" },
+                options: { sort: { created_at: -1 } },
+            },
+            { path: "owner", select: "-__v -password -tokens" },
+        ]);
         if (!product)
             response.status(404).send("Not Found");
-        response.json(product);
+        response.json({ product, bids: product.bids });
     }
     catch (error) {
         response.status(400).json(error);

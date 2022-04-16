@@ -1,5 +1,4 @@
 import React from "react";
-import Layout from "../../layout/index";
 import Grid from "@mui/material/Grid";
 import Card from "../Card/index";
 // import Swiper from "../../containers/Swiper/index";
@@ -14,18 +13,19 @@ const Home = () => {
     dispatch(fetchProducts());
   }, [dispatch]);
   return (
-    <Layout>
+    <>
       <Grid
         container
         spacing={{ xs: 2, md: 3 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
       >
         {products.map((product: any) => (
-          <Grid item xs={2} sm={4} md={4} key={product._id}>
+          <Grid item sm={12} md={6} lg={4} key={product._id}>
             <Card
               name={product.name}
               image={product.image}
               price={product.startingPrice}
+              id={product._id}
             />
           </Grid>
         ))}
@@ -39,7 +39,7 @@ const Home = () => {
       >
         <Pagination count={10} color="primary" />
       </Grid>
-    </Layout>
+    </>
   );
 };
 export default Home;
