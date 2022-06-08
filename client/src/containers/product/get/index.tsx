@@ -18,7 +18,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import { useDispatch } from "react-redux";
-import { fetchProduct, sendBid } from "../../store/actions/index";
+import { fetchProduct, sendBid } from "../../../store/actions/index";
 import { useParams } from "react-router-dom";
 import Moment from "react-moment";
 
@@ -82,7 +82,9 @@ const Product = () => {
   const product = useSelector((state: any) => state.auth.product);
 
   useEffect(() => {
+    document.title = "Auction | ... .";
     if (product) {
+      document.title = "Auction | " + product.name || "Auction";
       const closingDate = new Date(product.closingDate).getTime();
       const currentDate = new Date().getTime();
       // Find the distance between now and the count down date

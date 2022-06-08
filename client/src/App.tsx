@@ -4,17 +4,19 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 // * Components
-import Home from "./components/Home/index";
 // import NotFound from "./components/Not Found/index";
 import Success from "./components/Success/index";
+import Page from "./layout/Page/index";
 
 // * Containers
+import Home from "./containers/Home/index";
 import Login from "./containers/auth/Login/index";
 import Logout from "./containers/auth/Logout/index";
 import Register from "./containers/auth/Register/index";
 import Wallet from "./containers/wallet/index";
 import Layout from "./layout/index";
-import Product from "./containers/product/index";
+import GetProduct from "./containers/product/get/index";
+import AddProduct from "./containers/product/add/index";
 
 import "./App.css";
 // * Store
@@ -32,19 +34,55 @@ function App() {
     <Routes>
       {!token && (
         <>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route
+            path="/login"
+            element={
+              <Page title="Login">
+                <Login />
+              </Page>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <Page title="Register">
+                <Register />
+              </Page>
+            }
+          />
           <Route path="*" element={<Navigate to="/login" />} />
         </>
       )}
       {token && (
         <>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
+            <Route
+              index
+              element={
+                <Page title="Home">
+                  <Home />
+                </Page>
+              }
+            />
             <Route path="product">
-              <Route path=":id" element={<Product />} />
+              <Route path=":id" element={<GetProduct />} />
+              <Route
+                path="add"
+                element={
+                  <Page title="Add Product">
+                    <AddProduct />
+                  </Page>
+                }
+              />
             </Route>
-            <Route path="wallet" element={<Wallet />} />
+            <Route
+              path="wallet"
+              element={
+                <Page title="Wallet">
+                  <Wallet />
+                </Page>
+              }
+            />
             <Route path="success" element={<Success />} />
             <Route path="logout" element={<Logout />} />
             {/* <Route path="*" element={<NotFound />} /> */}

@@ -1,6 +1,6 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
-import Card from "../Card/index";
+import Card from "../../components/Card/index";
 // import Swiper from "../../containers/Swiper/index";
 import { fetchProducts } from "../../store/actions/index";
 import { useDispatch, useSelector } from "react-redux";
