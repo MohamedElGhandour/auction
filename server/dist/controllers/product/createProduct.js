@@ -16,7 +16,8 @@ exports.createProduct = void 0;
 const product_1 = __importDefault(require("../../models/product/product"));
 const createProduct = (request, response, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const product = new product_1.default(Object.assign(Object.assign({}, request.body), { owner: request.user._id }));
+        console.log(request.body);
+        const product = new product_1.default(Object.assign(Object.assign({}, request.body), { livePrice: request.body.startingPrice, owner: request.user._id }));
         yield product.save();
         response.json(product);
     }

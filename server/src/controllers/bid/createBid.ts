@@ -1,6 +1,7 @@
 import { RequestHandler, Request } from "express";
 import Bid from "../../models/bid/bid";
 import Product from "../../models/product/product";
+import Wallet from "../../models/wallet/wallet";
 
 export const bid: RequestHandler = async (
   request: Request | any,
@@ -16,22 +17,51 @@ export const bid: RequestHandler = async (
       {
         path: "bids",
         populate: { path: "owner", select: "-__v -password -tokens" },
-        options: { sort: { created_at: -1 } },
+        options: { sort: { createdAt: -1 } },
       },
       { path: "owner", select: "-__v -password -tokens" },
     ]);
-    if (!product) response.status(404).send("Not Found");
-    request.user.currencyAmount =
-      request.user.currencyAmount - request.body.price;
+    if (!product) {
+      await Bid.findOneAndDelete({ _id: bid._id });
+      return response.json({ msg: "PRODUCT NOT FOUND", statusText: "FAILED" });
+    }
+    if (String(product.owner._id) === String(request.user._id)) {
+      await Bid.findOneAndDelete({ _id: bid._id });
+      return response.json({
+        msg: "YOU CANT BID FOR YOUR OWN PRODUCT",
+        statusText: "FAILED",
+      });
+    }
+    let biggestBidPrice = 0;
+    for (let index = 0; index < product.bids.length; index++)
+      if (String(product.bids[index].owner._id) == String(request.user._id))
+        biggestBidPrice =
+          product.bids[index].price > biggestBidPrice
+            ? product.bids[index].price
+            : biggestBidPrice;
+
+    const realPrice = request.body.price - biggestBidPrice;
+    if (realPrice > request.user.currencyAmount)
+      return response.json({ msg: "Charge your wallet", statusText: "FAILED" });
+    request.user.currencyAmount = request.user.currencyAmount - realPrice;
     await request.user.save();
     product!.livePrice = request.body.price;
     await product!.save();
-    response.json({
+    const wallet = new Wallet({
+      owner: request.user._id,
+      amount: realPrice,
+      type: false,
+      state: "Withdraw your bid in auctions",
+      bid: bid,
+      product: product,
+    });
+    await wallet.save();
+    return response.json({
       product,
       bids: product!.bids,
       currencyAmount: request.user.currencyAmount,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };

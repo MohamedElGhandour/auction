@@ -13,12 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.payment = void 0;
+const wallet_1 = __importDefault(require("../../models/wallet/wallet"));
 const stripe_1 = __importDefault(require("stripe"));
 const stripe = new stripe_1.default(process.env.STRIPE_KEY, {
     apiVersion: "2020-08-27",
 });
 const payment = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("test ", request.body, request.user);
     try {
         const stripeRes = yield stripe.charges.create({
             source: request.body.tokenId,
@@ -28,9 +28,20 @@ const payment = (request, response) => __awaiter(void 0, void 0, void 0, functio
         request.user.currencyAmount =
             request.user.currencyAmount + stripeRes.amount;
         yield request.user.save();
+        const wallet = new wallet_1.default({
+            owner: request.user._id,
+            amount: stripeRes.amount,
+            type: true,
+            state: "Deposit to e-wallet",
+        });
+        yield wallet.save();
         response
             .status(200)
-            .json({ stripeRes, currencyAmount: request.user.currencyAmount });
+            .json({
+            stripeRes,
+            currencyAmount: request.user.currencyAmount,
+            wallet: wallet,
+        });
     }
     catch (error) {
         response.status(400).json(error);

@@ -23,8 +23,8 @@ const Home = () => {
           <Grid item sm={12} md={6} lg={4} key={product._id}>
             <Card
               name={product.name}
-              image={product.image}
-              price={product.startingPrice}
+              image={product.images[0].image}
+              price={product.livePrice}
               id={product._id}
             />
           </Grid>

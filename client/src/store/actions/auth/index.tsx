@@ -82,3 +82,13 @@ export const authRegister = (data: AUTH_REGISTER) => ({
   type: actionTypes.AUTH_REGISTER,
   data: data,
 });
+
+export const uploadImage = (data: any) => ({
+  type: actionTypes.UPLOAD_IMAGE,
+  image: data,
+});
+
+export const createProduct = (data: any) => ({
+  type: actionTypes.CREATE_PRODUCT,
+  data: data,
+});

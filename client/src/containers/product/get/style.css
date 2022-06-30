@@ -1,0 +1,17 @@
+figure.zoom {
+  /* background-position: 50% 50%; */
+  cursor: zoom-in;
+  width: 100%;
+  margin: auto;
+  background-repeat: no-repeat;
+  border-radius: 4px;
+}
+figure.zoom img:hover {
+  opacity: 0;
+}
+figure.zoom img {
+  transition: opacity 0.5s;
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+}

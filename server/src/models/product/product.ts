@@ -22,30 +22,39 @@ const productSchema = {
     required: true,
     ref: "Account",
   },
-  comments: {
-    type: ObjectId,
-    // required: true,
-    ref: "Comment",
-  },
   startingPrice: {
     type: Number,
     required: true,
+  },
+  views: {
+    type: Number,
+    default: 0,
   },
   livePrice: {
     type: Number,
     required: true,
   },
-  category: {
-    type: String,
-    required: true,
-    trim: true,
+  categories: {
+    type: [
+      {
+        category: {
+          type: String,
+          trim: true,
+          required: true,
+        },
+      },
+    ],
+    validate(array: []) {
+      if (array.length === 0) {
+        throw new Error("categories are required.");
+      }
+    },
   },
   description: {
     type: String,
     required: true,
     trim: true,
   },
-  startingDate: { type: Date, default: Date.now },
   closingDate: {
     type: Date,
     required: true,
@@ -57,9 +66,21 @@ const productSchema = {
     //   }
     // },
   },
-  image: {
-    type: String,
-    required: true,
+  images: {
+    type: [
+      {
+        image: {
+          type: String,
+          trim: true,
+          required: true,
+        },
+      },
+    ],
+    validate(array: []) {
+      if (array.length === 0) {
+        throw new Error("images are required.");
+      }
+    },
   },
   successfulBidder: {
     bid: {

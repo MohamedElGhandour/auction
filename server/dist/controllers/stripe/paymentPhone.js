@@ -8,19 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bids = void 0;
-const bid_1 = __importDefault(require("../../models/bid/bid"));
-const bids = (_request, response) => __awaiter(void 0, void 0, void 0, function* () {
+exports.paymentPhone = void 0;
+const paymentPhone = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const bids = yield bid_1.default.find({}).populate("owner").populate("product");
-        response.status(200).json({ bids });
+        request.user.currencyAmount =
+            request.user.currencyAmount + request.body.amount;
+        yield request.user.save();
+        response.status(200).json({ currencyAmount: request.user.currencyAmount });
     }
     catch (error) {
         response.status(400).json(error);
     }
 });
-exports.bids = bids;
+exports.paymentPhone = paymentPhone;

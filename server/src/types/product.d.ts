@@ -8,13 +8,12 @@ export interface Product {
   owner: ObjectId;
   startingPrice: number;
   livePrice: number;
-  category: string;
+  categories: object[];
   description: string;
-  startingDate: Date;
   closingDate: Date;
-  comments: ObjectId;
   bids: ObjectId;
-  image: string;
+  images: object[];
+  views: number;
   //   hidden: boolean;
 }
 

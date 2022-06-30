@@ -8,4 +8,5 @@ const authentication_1 = __importDefault(require("../middleware/auth/authenticat
 const index_1 = require("../controllers/stripe/index");
 const router = (0, express_1.Router)();
 router.post("/payment", authentication_1.default, index_1.payment);
+router.post("/paymentphone", authentication_1.default, index_1.paymentPhone);
 exports.default = router;

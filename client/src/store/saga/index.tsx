@@ -8,6 +8,8 @@ import {
   addPaymentSaga,
   fetchProduct,
   sendBid,
+  uploadImageSaga,
+  createProductSage,
 } from "./auth/index";
 
 import * as actionTypes from "../actions/actionTypes";
@@ -22,5 +24,7 @@ export function* watchAuth() {
     takeEvery(actionTypes.AUTH_CHECK_STATE, authCheckStateSaga),
     takeEvery(actionTypes.ADD_PAYMENT, addPaymentSaga),
     takeEvery(actionTypes.SEND_BID, sendBid),
+    takeEvery(actionTypes.UPLOAD_IMAGE, uploadImageSaga),
+    takeEvery(actionTypes.CREATE_PRODUCT, createProductSage),
   ]);
 }

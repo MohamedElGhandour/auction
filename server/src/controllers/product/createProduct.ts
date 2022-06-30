@@ -8,17 +8,15 @@ export const createProduct: RequestHandler = async (
   next
 ) => {
   try {
-    // if (!request.file) throw new Error("Image is Required");
-    // const buffer = await sharp(request.file.buffer).png().toBuffer();
+    console.log(request.body);
     const product = new Product({
       ...request.body,
+      livePrice: request.body.startingPrice,
       owner: request.user._id,
-      // image: buffer,
     });
     await product.save();
     response.json(product);
   } catch (error) {
-    // response.status(400).json(error);
     next(error);
   }
 };

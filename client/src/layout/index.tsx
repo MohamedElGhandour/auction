@@ -41,6 +41,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import Grid from "@mui/material/Grid";
 import { NavLink, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
+import numeral from "numeral";
 
 // * SVG
 import Logo from "../assets/images/logo";
@@ -160,10 +161,8 @@ export default function Layout() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [
-    mobileMoreAnchorEl,
-    setMobileMoreAnchorEl,
-  ] = React.useState<null | HTMLElement>(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
+    React.useState<null | HTMLElement>(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -346,10 +345,13 @@ export default function Layout() {
               }}
             >
               <AccountBalanceWalletIcon />
-              <Typography sx={{ pl: 1, pr: 1 }}>
-                {currencyAmount ? currencyAmount : "000"}{" "}
-                <span style={{ color: "#1878f2" }}>$</span>
-              </Typography>
+              <Tooltip title={`${currencyAmount} $`}>
+                <Typography sx={{ pl: 1, pr: 1 }}>
+                  {currencyAmount
+                    ? numeral(currencyAmount).format("($ 0.00 a)")
+                    : "000"}
+                </Typography>
+              </Tooltip>
             </Box>
           </NavLink>
 

@@ -49,6 +49,7 @@ const failRegister = (state: any, action: any) => ({
 const successFetchProducts = (state: any, action: any) => ({
   ...state,
   products: action.data.products,
+  product: null,
 });
 
 const successFetchProduct = (state: any, action: any) => ({
@@ -64,11 +65,14 @@ const successAddPayment = (state: any, action: any) => {
   };
 };
 
-const successSendBid = (state: any, action: any) => ({
-  ...state,
-  product: { ...action.data.product, bids: action.data.bids },
-  currencyAmount: action.data.currencyAmount,
-});
+const successSendBid = (state: any, action: any) => {
+  localStorage.setItem("currencyAmount", action.data.currencyAmount);
+  return {
+    ...state,
+    product: { ...action.data.product, bids: action.data.bids },
+    currencyAmount: action.data.currencyAmount,
+  };
+};
 
 const authLogout = () => initialState;
 

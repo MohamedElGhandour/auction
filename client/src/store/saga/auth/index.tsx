@@ -1,6 +1,8 @@
 import {
   put,
   // delay
+  call,
+  all,
 } from "redux-saga/effects";
 import * as actions from "../../actions/index";
 import { ResponseGenerator } from "../../../types/global";
@@ -172,6 +174,57 @@ export function* registerSaga(action: any) {
   } catch (error) {
     yield put(actions.loadingSignup(false));
     yield put(actions.failRegister(error));
+    console.log(error);
+  }
+}
+
+export function* createProductSage(action) {
+  let data = action.data;
+  const images = yield all(
+    data.images.map((image) => {
+      return call(uploadImageSaga, image);
+    })
+  );
+  for (let index = 0; index < data.images.length; index++) {
+    data.images[index] = { image: images[index].secure_url };
+  }
+  const url: string = yield `${server}/api/product/`;
+  const token: string = yield localStorage.getItem("token");
+  try {
+    const response = yield fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    });
+    const res = yield response.json();
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function* uploadImageSaga(image) {
+  const data = new FormData();
+  data.append("upload_preset", "auction-system");
+  data.append("file", image);
+  data.append("cloud_name", process.env.REACT_APP_CLOUDINARY_KEY);
+  try {
+    const response = yield fetch(process.env.REACT_APP_CLOUDINARY_API_URL, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      body: data, // body data type must match "Content-Type" header
+    });
+    const res = yield response.json();
+    return res;
+  } catch (error) {
     console.log(error);
   }
 }

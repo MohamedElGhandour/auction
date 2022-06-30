@@ -21,12 +21,16 @@ const product = (request, response) => __awaiter(void 0, void 0, void 0, functio
             {
                 path: "bids",
                 populate: { path: "owner", select: "-__v -password -tokens" },
-                options: { sort: { created_at: -1 } },
+                options: { sort: { createdAt: -1 } },
             },
             { path: "owner", select: "-__v -password -tokens" },
         ]);
         if (!product)
             response.status(404).send("Not Found");
+        if (!(String(product === null || product === void 0 ? void 0 : product.owner._id) === String(request.user._id))) {
+            product.views = product.views + 1;
+            yield (product === null || product === void 0 ? void 0 : product.save());
+        }
         response.json({ product, bids: product.bids });
     }
     catch (error) {

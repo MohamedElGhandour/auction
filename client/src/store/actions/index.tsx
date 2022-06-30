@@ -18,6 +18,8 @@ export {
   successFetchProduct,
   sendBid,
   successSendBid,
+  uploadImage,
+  createProduct,
 } from "./auth/index";
 
 export { loadingLogin, loadingSignup } from "./ui/index";

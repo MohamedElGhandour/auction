@@ -1,4 +1,4 @@
-import { Router, Request } from "express";
+import { Router } from "express";
 import {
   createProduct,
   products,
@@ -6,25 +6,11 @@ import {
   search,
 } from "../controllers/product/index";
 import authMiddleware from "../middleware/auth/authentication";
-import multer from "multer";
 
 const router = Router();
 
-const upload = multer({
-  // dest: "avatar",
-  limits: {
-    fileSize: 1000000,
-  },
-  fileFilter(_req: Request, file, callback) {
-    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-      callback(new Error("File must be jpg, jpeg, png"));
-    }
-    callback(null, true);
-  },
-});
-
 // create product
-router.post("/", authMiddleware, upload.single("image"), createProduct);
+router.post("/", authMiddleware, createProduct);
 
 // get products
 router.get("/", authMiddleware, products);

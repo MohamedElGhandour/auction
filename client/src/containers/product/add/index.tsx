@@ -11,6 +11,9 @@ import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternate
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import Stack from "@mui/material/Stack";
+import { useDispatch } from "react-redux";
+import { createProduct } from "../../../store/actions/index";
+
 // date-fns
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -113,6 +116,7 @@ const NumberFormatCustom = React.forwardRef<NumberFormat<any>, CustomProps>(
 );
 
 const AddProduct = () => {
+  const dispatch = useDispatch();
   const [valueDate, setValueDate] = React.useState<Date | null>(null);
 
   const [controls, setControls] = React.useState({
@@ -292,14 +296,16 @@ const AddProduct = () => {
     ) {
       const data = {
         name: name,
-        category: category,
-        price: price,
+        categories: category,
+        startingPrice: price,
         description: description,
         images: images,
-        date: date,
+        closingDate: date,
       };
-      // dispatch(authRegister(data));
-      console.log(data);
+      for (let index = 0; index < data.categories.length; index++) {
+        data.categories[index] = { category: data.categories[index].text };
+      }
+      dispatch(createProduct(data));
     }
   };
 
