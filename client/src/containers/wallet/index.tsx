@@ -16,7 +16,7 @@ import NumberFormat from "react-number-format";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
-import { addPayment } from "../../store/actions/index";
+import { addPayment, fetchWallet } from "../../store/actions/index";
 import Tooltip from "@mui/material/Tooltip";
 import numeral from "numeral";
 import Paper from "@mui/material/Paper";
@@ -27,6 +27,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import Moment from "react-moment";
+import RemoveCircleOutlineTwoToneIcon from "@mui/icons-material/RemoveCircleOutlineTwoTone";
+import AddCircleOutlineTwoToneIcon from "@mui/icons-material/AddCircleOutlineTwoTone";
 
 interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
@@ -87,7 +90,7 @@ const CssTextField = styled(TextField)({
 });
 
 interface Column {
-  id: "name" | "code" | "population" | "size" | "density";
+  id: "date" | "transaction" | "amount" | "type";
   label: string;
   minWidth?: number;
   align?: "right";
@@ -95,66 +98,33 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: "name", label: "Name", minWidth: 170 },
-  { id: "code", label: "ISO\u00a0Code", minWidth: 100 },
+  { id: "date", label: "Date", minWidth: 100 },
+  { id: "transaction", label: "Transaction", minWidth: 170 },
   {
-    id: "population",
-    label: "Population",
+    id: "amount",
+    label: "amount",
     minWidth: 170,
     align: "right",
     format: (value: number) => value.toLocaleString("en-US"),
   },
-  {
-    id: "size",
-    label: "Size\u00a0(km\u00b2)",
-    minWidth: 170,
-    align: "right",
-    format: (value: number) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "density",
-    label: "Density",
-    minWidth: 170,
-    align: "right",
-    format: (value: number) => value.toFixed(2),
-  },
+  { id: "type", label: "Type" },
 ];
 
 interface Data {
-  name: string;
-  code: string;
-  population: number;
-  size: number;
-  density: number;
+  date: Date;
+  transaction: string;
+  amount: number;
+  type: boolean;
 }
 
 function createData(
-  name: string,
-  code: string,
-  population: number,
-  size: number
+  date: Date,
+  transaction: string,
+  amount: number,
+  type: boolean
 ): Data {
-  const density = population / size;
-  return { name, code, population, size, density };
+  return { date, transaction, amount, type };
 }
-
-const rows = [
-  createData("India", "IN", 1324171354, 3287263),
-  createData("China", "CN", 1403500365, 9596961),
-  createData("Italy", "IT", 60483973, 301340),
-  createData("United States", "US", 327167434, 9833520),
-  createData("Canada", "CA", 37602103, 9984670),
-  createData("Australia", "AU", 25475400, 7692024),
-  createData("Germany", "DE", 83019200, 357578),
-  createData("Ireland", "IE", 4857000, 70273),
-  createData("Mexico", "MX", 126577691, 1972550),
-  createData("Japan", "JP", 126317000, 377973),
-  createData("France", "FR", 67022000, 640679),
-  createData("United Kingdom", "GB", 67545757, 242495),
-  createData("Russia", "RU", 146793744, 17098246),
-  createData("Nigeria", "NG", 200962417, 923768),
-  createData("Brazil", "BR", 210147125, 8515767),
-];
 
 const Wallet = () => {
   const [page, setPage] = React.useState(0);
@@ -176,10 +146,26 @@ const Wallet = () => {
   const [stripeToken, setStripeToken] = useState<any>(null);
 
   const dispatch = useDispatch();
+
+  const transactions = useSelector((state: any) => state.wallet.transactions);
+
+  const rows = transactions.map((transaction) =>
+    createData(
+      transaction.createdAt,
+      transaction.state,
+      transaction.amount,
+      transaction.type
+    )
+  );
+
+  useEffect(() => {
+    dispatch(fetchWallet());
+  }, [dispatch]);
+
   useEffect(() => {
     if (stripeToken?.id) {
       const data = {
-        amount: +values.numberformat,
+        amount: +values.numberformat * 100,
         tokenId: stripeToken!.id,
       };
       dispatch(addPayment(data));
@@ -293,7 +279,7 @@ const Wallet = () => {
                 name="Auction System"
                 billingAddress
                 description={`total is ${values.numberformat}`}
-                amount={+values.numberformat}
+                amount={+values.numberformat * 100}
                 token={onToken}
                 currency="USD"
                 stripeKey={stripeKey}
@@ -330,76 +316,101 @@ const Wallet = () => {
           <Card sx={{ minWidth: 275 }}>
             <CardContent>
               <Typography variant="h5" component="div">
-                Details
+                Transactions
               </Typography>
-              {/* <Typography variant="caption">Details</Typography> */}
-              <Paper
-                sx={{
-                  width: "100%",
-                  overflow: "hidden",
-                  marginTop: "15px",
-                  boxShadow:
-                    "0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%), 0px -2px 3px 0px rgb(0 0 0 / 15%)",
-                }}
-              >
-                <TableContainer sx={{ maxHeight: 440 }}>
-                  <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
-                      <TableRow>
-                        {columns.map((column) => (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                            style={{ minWidth: column.minWidth }}
-                          >
-                            {column.label}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {rows
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
-                        .map((row) => {
-                          return (
-                            <TableRow
-                              hover
-                              role="checkbox"
-                              tabIndex={-1}
-                              key={row.code}
+              <Typography variant="caption">Details</Typography>
+              {transactions.length > 0 ? (
+                <Paper
+                  sx={{
+                    width: "100%",
+                    overflow: "hidden",
+                    marginTop: "15px",
+                    boxShadow:
+                      "0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%), 0px -2px 3px 0px rgb(0 0 0 / 15%)",
+                  }}
+                >
+                  <TableContainer sx={{ maxHeight: 440 }}>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {columns.map((column) => (
+                            <TableCell
+                              key={column.id}
+                              align={column.align}
+                              style={{ minWidth: column.minWidth }}
                             >
-                              {columns.map((column) => {
-                                const value = row[column.id];
-                                return (
-                                  <TableCell
-                                    key={column.id}
-                                    align={column.align}
-                                  >
-                                    {column.format && typeof value === "number"
-                                      ? column.format(value)
-                                      : value}
-                                  </TableCell>
-                                );
-                              })}
-                            </TableRow>
-                          );
-                        })}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[10, 25, 100]}
-                  component="div"
-                  count={rows.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-              </Paper>
+                              {column.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {rows
+                          .slice(
+                            page * rowsPerPage,
+                            page * rowsPerPage + rowsPerPage
+                          )
+                          .map((row) => {
+                            return (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={row.date}
+                              >
+                                {columns.map((column) => {
+                                  const value = row[column.id];
+                                  return (
+                                    <TableCell
+                                      key={column.id}
+                                      align={column.align}
+                                    >
+                                      {column.format &&
+                                      typeof value === "number" ? (
+                                        column.format(value)
+                                      ) : column.id === "date" ? (
+                                        <Moment fromNow>{value}</Moment>
+                                      ) : column.id === "type" ? (
+                                        value === true ? (
+                                          <AddCircleOutlineTwoToneIcon
+                                            style={{
+                                              color: "green",
+                                            }}
+                                          />
+                                        ) : (
+                                          <RemoveCircleOutlineTwoToneIcon
+                                            style={{
+                                              color: "red",
+                                            }}
+                                          />
+                                        )
+                                      ) : (
+                                        value
+                                      )}
+                                    </TableCell>
+                                  );
+                                })}
+                              </TableRow>
+                            );
+                          })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </Paper>
+              ) : (
+                <p style={{ textTransform: "capitalize", textAlign: "center" }}>
+                  make a transaction.
+                </p>
+              )}
             </CardContent>
           </Card>
         </Grid>

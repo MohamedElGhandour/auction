@@ -15,18 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.products = void 0;
 const product_1 = __importDefault(require("../../models/product/product"));
 const products = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const match = {};
-    const sort = {};
-    if (request.query.completed)
-        match.completed =
-            request.query.completed.toLowerCase() === "true";
-    if (request.query.sortBy) {
-        const parts = request.query.sortBy.split(":");
-        sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
-    }
+    const page = parseInt(request.query.page);
+    const count = parseInt(request.query.count);
     try {
-        const products = yield product_1.default.find({});
-        response.status(200).json({ products });
+        const products = yield product_1.default.find({ state: "alive" })
+            .skip(count * (page - 1))
+            .sort({ createdAt: -1 })
+            .limit(count);
+        const countProducts = yield product_1.default.find({
+            state: "alive",
+        }).countDocuments();
+        response.status(200).json({ products, countProducts });
     }
     catch (error) {
         response.status(400).json(error);

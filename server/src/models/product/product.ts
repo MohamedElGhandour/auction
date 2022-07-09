@@ -94,6 +94,15 @@ const productSchema = {
       ref: "Account",
     },
   },
+  successfulAuction: {
+    type: Boolean,
+  },
+  state: {
+    type: String,
+    trim: true,
+    required: true,
+    default: "alive",
+  },
 };
 
 const options = {

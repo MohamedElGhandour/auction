@@ -14,6 +14,9 @@ export interface Product {
   bids: ObjectId;
   images: object[];
   views: number;
+  state: string;
+  successfulBidder: { bid: ObjectId; bider: ObjectId };
+  successfulAuction: boolean;
   //   hidden: boolean;
 }
 

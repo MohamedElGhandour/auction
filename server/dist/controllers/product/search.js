@@ -16,11 +16,20 @@ exports.search = void 0;
 const product_1 = __importDefault(require("../../models/product/product"));
 const search = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const productPattern = new RegExp(`^${request.body.name}`);
+    const page = parseInt(request.query.page);
+    const count = parseInt(request.query.count);
     try {
-        const products = yield product_1.default.find({ name: productPattern });
-        if (!products)
-            response.status(404).send("Not Found");
-        response.json(products);
+        const products = yield product_1.default.find({
+            name: { $regex: productPattern },
+            state: "alive",
+        })
+            .skip(count * (page - 1))
+            .sort({ createdAt: -1 })
+            .limit(count);
+        const countProducts = yield product_1.default.find({
+            name: { $regex: productPattern },
+        }).countDocuments();
+        response.json({ products, countProducts });
     }
     catch (error) {
         response.status(400).json(error);

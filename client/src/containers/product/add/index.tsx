@@ -346,6 +346,103 @@ const AddProduct = () => {
     [isFocused, isDragAccept, isDragReject]
   );
 
+  const clearFormHandler = () => {
+    while (acceptedFiles.length > 0) {
+      acceptedFiles.pop();
+    }
+    setValueDate(null);
+    setControls({
+      name: {
+        elementType: "input",
+        elementConfig: {
+          type: "name",
+          placeholder: "Product Name",
+        },
+        value: "",
+        validation: {
+          required: true,
+          minLength: 6,
+          maxLength: 70,
+        },
+        valid: false,
+        touched: false,
+      },
+      category: {
+        elementType: "input",
+        elementConfig: {
+          type: "category",
+          placeholder: "Category",
+        },
+        value: [],
+        validation: {
+          requiredList: true,
+          minLength: 1,
+          maxLength: 10,
+        },
+        valid: false,
+        touched: false,
+      },
+      price: {
+        elementType: "input",
+        elementConfig: {
+          type: "price",
+          placeholder: "Starting Price",
+        },
+        value: "",
+        validation: {
+          required: true,
+          minPrice: 10,
+          maxPrice: 10_000_000,
+        },
+        valid: false,
+        touched: false,
+      },
+      description: {
+        elementType: "textarea",
+        elementConfig: {
+          type: "description",
+          placeholder: "Description",
+        },
+        value: "",
+        validation: {
+          required: true,
+          minLength: 6,
+          maxLength: 1000,
+        },
+        valid: false,
+        touched: false,
+      },
+      images: {
+        elementType: "input",
+        elementConfig: {
+          type: "images",
+          placeholder: "upload",
+        },
+        value: [],
+        validation: {
+          requiredList: true,
+          minLength: 1,
+          maxLength: 5,
+        },
+        valid: false,
+        touched: false,
+      },
+      date: {
+        elementType: "input",
+        elementConfig: {
+          type: "date",
+          placeholder: "Closing Date",
+        },
+        value: null,
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
+      },
+    });
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <h2>Add Product</h2>
@@ -496,7 +593,7 @@ const AddProduct = () => {
                       color: "rgb(94, 93, 93)",
                     }}
                   >
-                    you need to add at least 4 images. pay attention to the
+                    you need to add at least 3 images. pay attention to the
                     quality of the pictures you add, comply with the background
                     color standards. pictures must be in certain dimensions.
                     Notice that the product shows all the details.
@@ -553,7 +650,12 @@ const AddProduct = () => {
                   >
                     Add Product
                   </Button>
-                  <Button size="large" fullWidth variant="outlined">
+                  <Button
+                    size="large"
+                    onClick={clearFormHandler}
+                    fullWidth
+                    variant="outlined"
+                  >
                     Clear Form
                   </Button>
                 </Stack>

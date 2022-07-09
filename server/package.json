@@ -19,6 +19,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.4",
     "multer": "^1.4.4",
+    "node-schedule": "^2.1.0",
     "sharp": "^0.30.3",
     "stripe": "^8.210.0",
     "validator": "^13.7.0"
@@ -31,6 +32,7 @@
     "@types/mongoose": "^5.11.97",
     "@types/multer": "^1.4.7",
     "@types/node": "^17.0.17",
+    "@types/node-schedule": "^2.1.0",
     "@types/sharp": "^0.30.0",
     "@types/validator": "^13.7.1",
     "dotenv": "^16.0.0",

@@ -17,6 +17,8 @@ import Wallet from "./containers/wallet/index";
 import Layout from "./layout/index";
 import GetProduct from "./containers/product/get/index";
 import AddProduct from "./containers/product/add/index";
+import Search from "./containers/Search/index";
+import Profile from "./containers/Profile/index";
 
 import "./App.css";
 // * Store
@@ -26,6 +28,9 @@ function App() {
   const token =
     useSelector((state: any) => state.auth.token) ||
     localStorage.getItem("token");
+  const name =
+    useSelector((state: any) => state.auth.name) ||
+    localStorage.getItem("name");
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(authCheckState());
@@ -64,6 +69,14 @@ function App() {
                 </Page>
               }
             />
+            <Route
+              path="profile"
+              element={
+                <Page title={name}>
+                  <Profile />
+                </Page>
+              }
+            />
             <Route path="product">
               <Route path=":id" element={<GetProduct />} />
               <Route
@@ -74,6 +87,7 @@ function App() {
                   </Page>
                 }
               />
+              <Route path="search" element={<Search />} />
             </Route>
             <Route
               path="wallet"

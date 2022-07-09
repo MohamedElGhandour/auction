@@ -2,20 +2,21 @@ import { RequestHandler } from "express";
 import Product from "../../models/product/product";
 
 // TODO add manipulate on query
-export const products: RequestHandler = async (request, response) => {
-  const match: any = {};
-  const sort: any = {};
-  if (request.query.completed)
-    match.completed =
-      (request.query.completed as string).toLowerCase() === "true";
-
-  if (request.query.sortBy) {
-    const parts = (request.query.sortBy as string).split(":");
-    sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
-  }
+export const products: RequestHandler = async (
+  request: Request | any,
+  response
+) => {
+  const page = parseInt(request.query.page);
+  const count = parseInt(request.query.count);
   try {
-    const products = await Product.find({});
-    response.status(200).json({ products });
+    const products = await Product.find({ state: "alive" })
+      .skip(count * (page - 1))
+      .sort({ createdAt: -1 })
+      .limit(count);
+    const countProducts = await Product.find({
+      state: "alive",
+    }).countDocuments();
+    response.status(200).json({ products, countProducts });
   } catch (error) {
     response.status(400).json(error);
   }

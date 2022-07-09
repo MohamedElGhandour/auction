@@ -29,10 +29,12 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import HomeIcon from "@mui/icons-material/Home";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import Container from "@mui/material/Container";
+import SpeedDial from "@mui/material/SpeedDial";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 // 3
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
@@ -262,7 +264,7 @@ export default function Layout() {
     </Menu>
   );
 
-  const settings = ["Profile", "Account", "Dashboard", "Logout"];
+  const settings = ["Profile", "home", "wallet", "product/search", "Logout"];
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -312,15 +314,40 @@ export default function Layout() {
           <NavLink to="/">
             <Logo />
           </NavLink>
-          <Search sx={{ ml: 1 }}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
+          <NavLink
+            to="/product/search"
+            style={{
+              color: "#060606",
+              textDecoration: "none",
+              cursor: "pointer",
+            }}
+          >
+            <Search
+              sx={{ ml: 1, display: { lg: "block", xs: "none" } }}
+              style={{
+                color: "#060606",
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+            >
+              <SearchIconWrapper>
+                <SearchIcon style={{ color: "rgba(0, 0, 0, 0.87)" }} />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                disabled
+                inputProps={{
+                  "aria-label": "search",
+                  style: { cursor: "pointer" },
+                }}
+                style={{
+                  color: "#060606",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                }}
+              />
+            </Search>
+          </NavLink>
           <Box sx={{ flexGrow: 1 }} />
           <NavLink
             style={{
@@ -395,11 +422,13 @@ export default function Layout() {
               {settings.map((setting) => (
                 <NavLink
                   key={setting}
-                  to={`/${setting.toLowerCase()}`}
+                  to={setting === "home" ? "/" : `/${setting.toLowerCase()}`}
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                    <Typography textAlign="center">
+                      {setting === "product/search" ? "search" : setting}
+                    </Typography>
                   </MenuItem>
                 </NavLink>
               ))}
@@ -431,11 +460,13 @@ export default function Layout() {
               {settings.map((setting) => (
                 <NavLink
                   key={setting}
-                  to={`/${setting.toLowerCase()}`}
+                  to={setting === "home" ? "/" : `/${setting.toLowerCase()}`}
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                    <Typography textAlign="center">
+                      {setting === "product/search" ? "search" : setting}
+                    </Typography>
                   </MenuItem>
                 </NavLink>
               ))}
@@ -467,40 +498,57 @@ export default function Layout() {
               seleted: true,
             },
             {
-              name: "Starred",
-              Icon: <FavoriteIcon />,
-              url: "/fav",
+              name: "Profile",
+              Icon: <AccountCircleIcon />,
+              url: "/profile",
               seleted: false,
             },
             {
-              name: "Send email",
-              Icon: <InboxIcon />,
-              url: "/email",
+              name: "Add Product",
+              Icon: <AddShoppingCartIcon />,
+              url: "/product/add",
+              seleted: false,
+            },
+            {
+              name: "Wallet",
+              Icon: <AccountBalanceWalletIcon />,
+              url: "/wallet",
+              seleted: false,
+            },
+            {
+              name: "Search",
+              Icon: <SearchIcon />,
+              url: "/product/search",
               seleted: false,
             },
           ].map((element) => (
-            <ListItemButton
+            <NavLink
               key={element.name}
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
+              style={{ textDecoration: "none", color: "rgba(0, 0, 0, 0.87)" }}
+              to={element.url}
             >
-              <ListItemIcon
+              <ListItemButton
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
                 }}
               >
-                {element.Icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={element.name}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {element.Icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={element.name}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </NavLink>
           ))}
         </List>
         {/* <Divider />
@@ -541,6 +589,13 @@ export default function Layout() {
       </Box>
       {renderMobileMenu}
       {renderMenu}
+      <NavLink to="/product/add">
+        <SpeedDial
+          ariaLabel="SpeedDial basic example"
+          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          icon={<SpeedDialIcon />}
+        ></SpeedDial>
+      </NavLink>
     </Box>
   );
 }

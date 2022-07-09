@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import numeral from "numeral";
 import { NavLink } from "react-router-dom";
 
 interface cardProps {
@@ -12,9 +13,53 @@ interface cardProps {
   image: string;
   price: string;
   id: string;
+  closingDate: any;
 }
 
 export default function ComplexGrid(props: cardProps) {
+  const [hours, setHours] = React.useState(0);
+  const [minutes, setMinutes] = React.useState(0);
+  const [seconds, setSeconds] = React.useState(0);
+  React.useEffect(() => {
+    if (props) {
+      const closingDate = new Date(props.closingDate).getTime();
+      const currentDate = new Date().getTime();
+      // Find the distance between now and the count down date
+      const distance = closingDate - currentDate;
+      // Time calculations for days, hours, minutes and seconds
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours =
+        days * 24 +
+        Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      setHours(hours);
+      setMinutes(minutes);
+      setSeconds(seconds);
+    }
+    let myInterval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+      if (seconds === 0) {
+        if (minutes === 0) {
+          if (hours === 0) {
+            clearInterval(myInterval);
+          } else {
+            setHours(hours - 1);
+            setMinutes(59);
+            setSeconds(59);
+          }
+        } else {
+          setMinutes(minutes - 1);
+          setSeconds(59);
+        }
+      }
+    }, 1000);
+    return () => {
+      clearInterval(myInterval);
+    };
+  }, [props, seconds, minutes, hours]);
   return (
     <Paper
       sx={{
@@ -81,7 +126,7 @@ export default function ComplexGrid(props: cardProps) {
                         Current Bid
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {props.price}$
+                        {numeral(props.price).format("($ 0.00 a)")}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -96,7 +141,7 @@ export default function ComplexGrid(props: cardProps) {
                         Auction Ending In
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        00 : 56 : 08
+                        {hours} : {minutes} : {seconds}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Hrs : Mins : Secs

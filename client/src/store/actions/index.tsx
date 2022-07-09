@@ -1,25 +1,35 @@
 export {
   successAuth,
-  // auth,
   authLogout,
   authLogoutSucceed,
-  // checkAuthTimeout,
   authCheckState,
   failLogin,
   failRegister,
-  // currentUser,
   authLogin,
   authRegister,
+} from "./auth/index";
+
+export {
   fetchProducts,
   successFetchProducts,
-  addPayment,
-  successAddPayment,
   fetchProduct,
   successFetchProduct,
   sendBid,
   successSendBid,
   uploadImage,
   createProduct,
-} from "./auth/index";
+  updatePageCount,
+  searchProducts,
+  successSearchProducts,
+  fetchProfile,
+  successFetchProfile,
+} from "./database/products/index";
 
-export { loadingLogin, loadingSignup } from "./ui/index";
+export {
+  addPayment,
+  fetchWallet,
+  successAddPayment,
+  successFetchWallet,
+} from "./database/wallet/index";
+
+export { loadingLogin, loadingSignup } from "./interface/index";

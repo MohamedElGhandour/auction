@@ -21,9 +21,14 @@ import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import createSagaMiddleware from "redux-saga";
 // * Reducers
 import authReducer from "./store/reducers/auth/index";
-import uiReducer from "./store/reducers/ui/index";
+import interfaceReducer from "./store/reducers/interface/index";
+import productsReducer from "./store/reducers/database/products/index";
+import walletReducer from "./store/reducers/database/wallet/index";
+
 // * Sagas
 import { watchAuth } from "./store/saga/index";
+import { watchProducts } from "./store/saga/index";
+import { watchWallet } from "./store/saga/index";
 
 const composeEnhancers =
   (process.env.NODE_ENV === "development"
@@ -32,7 +37,9 @@ const composeEnhancers =
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  ui: uiReducer,
+  interface: interfaceReducer,
+  products: productsReducer,
+  wallet: walletReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -43,6 +50,8 @@ const store = createStore(
 );
 
 sagaMiddleware.run(watchAuth);
+sagaMiddleware.run(watchProducts);
+sagaMiddleware.run(watchWallet);
 
 ReactDOM.render(
   <Provider store={store}>

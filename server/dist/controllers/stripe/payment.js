@@ -26,21 +26,19 @@ const payment = (request, response) => __awaiter(void 0, void 0, void 0, functio
             currency: "usd",
         });
         request.user.currencyAmount =
-            request.user.currencyAmount + stripeRes.amount;
+            request.user.currencyAmount + stripeRes.amount / 100;
         yield request.user.save();
-        const wallet = new wallet_1.default({
+        const transaction = new wallet_1.default({
             owner: request.user._id,
-            amount: stripeRes.amount,
+            amount: stripeRes.amount / 100,
             type: true,
             state: "Deposit to e-wallet",
         });
-        yield wallet.save();
-        response
-            .status(200)
-            .json({
+        yield transaction.save();
+        response.status(200).json({
             stripeRes,
             currencyAmount: request.user.currencyAmount,
-            wallet: wallet,
+            transaction: transaction,
         });
     }
     catch (error) {

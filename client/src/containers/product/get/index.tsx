@@ -118,7 +118,7 @@ const Product = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const product = useSelector((state: any) => state.auth.product);
+  const product = useSelector((state: any) => state.products.product);
 
   const myId =
     useSelector((state: any) => state.auth.id) ||
@@ -220,8 +220,16 @@ const Product = () => {
     createData("number of bidding", product ? product.bids.length : 0),
     createData("Views", product ? product.views : 0),
     createData(
+      "Starting Price",
+      product ? numeral(product.startingPrice).format("($ 0.00 a)") : 0
+    ),
+    createData(
       "Current Bid",
-      product ? numeral(product.livePrice).format("($ 0.00 a)") : 0
+      product
+        ? numeral(
+            product.livePrice === product.startingPrice ? 0 : product.livePrice
+          ).format("($ 0.00 a)")
+        : 0
     ),
     createData(
       "over base",
@@ -295,63 +303,76 @@ const Product = () => {
                     {numeral(product.livePrice).format("($ 0.00 a)")}
                   </Typography>
                 </Tooltip>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ textAlign: "center", mt: 4 }}
-                  component="div"
-                >
-                  Bid ending in
-                </Typography>
-                <Grid container>
-                  <Grid item xs>
+                {new Date(product.closingDate).getTime() >
+                new Date().getTime() ? (
+                  <>
                     <Typography
-                      variant="h4"
-                      sx={{ textAlign: "center" }}
+                      variant="subtitle1"
+                      sx={{ textAlign: "center", mt: 4 }}
                       component="div"
                     >
-                      {hours}
+                      Bid ending in
                     </Typography>
-                    <Typography
-                      variant="subtitle2"
-                      sx={{ textAlign: "center" }}
-                      component="div"
-                    >
-                      Hours
-                    </Typography>
-                  </Grid>
-                  <Grid item xs>
-                    <Typography
-                      variant="h4"
-                      sx={{ textAlign: "center" }}
-                      component="div"
-                    >
-                      {minutes}
-                    </Typography>
-                    <Typography
-                      variant="subtitle2"
-                      sx={{ textAlign: "center" }}
-                      component="div"
-                    >
-                      Mins
-                    </Typography>
-                  </Grid>
-                  <Grid item xs>
-                    <Typography
-                      variant="h4"
-                      sx={{ textAlign: "center" }}
-                      component="div"
-                    >
-                      {seconds}
-                    </Typography>
-                    <Typography
-                      variant="subtitle2"
-                      sx={{ textAlign: "center" }}
-                      component="div"
-                    >
-                      Secs
-                    </Typography>
-                  </Grid>
-                </Grid>
+                    <Grid container>
+                      <Grid item xs>
+                        <Typography
+                          variant="h4"
+                          sx={{ textAlign: "center" }}
+                          component="div"
+                        >
+                          {hours}
+                        </Typography>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ textAlign: "center" }}
+                          component="div"
+                        >
+                          Hours
+                        </Typography>
+                      </Grid>
+                      <Grid item xs>
+                        <Typography
+                          variant="h4"
+                          sx={{ textAlign: "center" }}
+                          component="div"
+                        >
+                          {minutes}
+                        </Typography>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ textAlign: "center" }}
+                          component="div"
+                        >
+                          Mins
+                        </Typography>
+                      </Grid>
+                      <Grid item xs>
+                        <Typography
+                          variant="h4"
+                          sx={{ textAlign: "center" }}
+                          component="div"
+                        >
+                          {seconds}
+                        </Typography>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ textAlign: "center" }}
+                          component="div"
+                        >
+                          Secs
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </>
+                ) : (
+                  <Typography
+                    variant="h5"
+                    sx={{ textAlign: "center", mt: 4 }}
+                    component="div"
+                  >
+                    Auction is over
+                  </Typography>
+                )}
                 {!(myId === product.owner._id) && (
                   <>
                     <Button
@@ -365,7 +386,7 @@ const Product = () => {
                     >
                       Bid Now
                     </Button>
-                    <Button
+                    {/* <Button
                       variant="outlined"
                       sx={{
                         display: "block",
@@ -374,7 +395,7 @@ const Product = () => {
                       }}
                     >
                       Outlined
-                    </Button>
+                    </Button> */}
                   </>
                 )}
                 {!(myId === product.owner._id) && (
@@ -416,10 +437,10 @@ const Product = () => {
                               variant="body2"
                               sx={{ mt: 2 }}
                             >
-                              Remember that to participate in this auction, you
-                              must pay the auction insurance fee, which is 20%
-                              of the starting price of the auction{" "}
-                              <small>"will not apply for now"</small>
+                              Remember that to participate in this auction, this
+                              transaction cannot be undone, which will be
+                              deducted from your e-wallet (you will get your
+                              money back if you do not win the auction)
                             </Typography>
                             <Grid container alignItems="end" spacing={1}>
                               <Grid item>

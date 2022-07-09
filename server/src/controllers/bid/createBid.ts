@@ -34,11 +34,12 @@ export const bid: RequestHandler = async (
     }
     let biggestBidPrice = 0;
     for (let index = 0; index < product.bids.length; index++)
-      if (String(product.bids[index].owner._id) == String(request.user._id))
-        biggestBidPrice =
-          product.bids[index].price > biggestBidPrice
-            ? product.bids[index].price
-            : biggestBidPrice;
+      if (String(bid._id) !== String(product.bids[index]._id))
+        if (String(product.bids[index].owner._id) == String(request.user._id))
+          biggestBidPrice =
+            product.bids[index].price > biggestBidPrice
+              ? product.bids[index].price
+              : biggestBidPrice;
 
     const realPrice = request.body.price - biggestBidPrice;
     if (realPrice > request.user.currencyAmount)
@@ -47,11 +48,12 @@ export const bid: RequestHandler = async (
     await request.user.save();
     product!.livePrice = request.body.price;
     await product!.save();
+    console.log(realPrice, biggestBidPrice, request.body.price);
     const wallet = new Wallet({
       owner: request.user._id,
       amount: realPrice,
       type: false,
-      state: "Withdraw your bid in auctions",
+      state: "Draw to bid in auctions",
       bid: bid,
       product: product,
     });

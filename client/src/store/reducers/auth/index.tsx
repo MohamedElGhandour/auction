@@ -11,8 +11,6 @@ const initialState = {
   errorRegister: null,
   currencyAmount: null,
   type: null,
-  products: [],
-  product: null,
 };
 
 const successAuth = (state: any, action: any) => {
@@ -46,34 +44,6 @@ const failRegister = (state: any, action: any) => ({
   errorRegister: action.error.message,
 });
 
-const successFetchProducts = (state: any, action: any) => ({
-  ...state,
-  products: action.data.products,
-  product: null,
-});
-
-const successFetchProduct = (state: any, action: any) => ({
-  ...state,
-  product: { ...action.data.product, bids: action.data.bids },
-});
-
-const successAddPayment = (state: any, action: any) => {
-  localStorage.setItem("currencyAmount", action.data.currencyAmount);
-  return {
-    ...state,
-    currencyAmount: action.data.currencyAmount,
-  };
-};
-
-const successSendBid = (state: any, action: any) => {
-  localStorage.setItem("currencyAmount", action.data.currencyAmount);
-  return {
-    ...state,
-    product: { ...action.data.product, bids: action.data.bids },
-    currencyAmount: action.data.currencyAmount,
-  };
-};
-
 const authLogout = () => initialState;
 
 const reducer = (state = initialState, action: any) => {
@@ -86,14 +56,6 @@ const reducer = (state = initialState, action: any) => {
       return failRegister(state, action);
     case actionTypes.AUTH_LOGOUT:
       return authLogout();
-    case actionTypes.SUCCESS_FETCH_PRODUCTS:
-      return successFetchProducts(state, action);
-    case actionTypes.SUCCESS_FETCH_PRODUCT:
-      return successFetchProduct(state, action);
-    case actionTypes.SUCCESS_ADD_PAYMENT:
-      return successAddPayment(state, action);
-    case actionTypes.SUCCESS_SEND_BID:
-      return successSendBid(state, action);
     default:
       return state;
   }

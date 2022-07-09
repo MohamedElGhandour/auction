@@ -16,22 +16,20 @@ export const payment: RequestHandler = async (
       currency: "usd",
     });
     request.user.currencyAmount =
-      request.user.currencyAmount + stripeRes.amount;
+      request.user.currencyAmount + stripeRes.amount / 100;
     await request.user.save();
-    const wallet = new Wallet({
+    const transaction = new Wallet({
       owner: request.user._id,
-      amount: stripeRes.amount,
+      amount: stripeRes.amount / 100,
       type: true,
       state: "Deposit to e-wallet",
     });
-    await wallet.save();
-    response
-      .status(200)
-      .json({
-        stripeRes,
-        currencyAmount: request.user.currencyAmount,
-        wallet: wallet,
-      });
+    await transaction.save();
+    response.status(200).json({
+      stripeRes,
+      currencyAmount: request.user.currencyAmount,
+      transaction: transaction,
+    });
   } catch (error) {
     response.status(400).json(error);
   }

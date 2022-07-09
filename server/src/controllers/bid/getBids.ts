@@ -1,7 +1,6 @@
 import { RequestHandler } from "express";
 import Bid from "../../models/bid/bid";
 
-// TODO add manipulate on query
 export const bids: RequestHandler = async (_request, response) => {
   try {
     const bids = await Bid.find({}).populate("owner").populate("product");
